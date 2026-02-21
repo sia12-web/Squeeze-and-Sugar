@@ -2,7 +2,7 @@
 __pycache__/
 *.pyc
 *.pyo
-data/
+/data/
 logs/
 .pytest_cache/
 *.egg-info/
