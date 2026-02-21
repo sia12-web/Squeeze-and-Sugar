@@ -63,3 +63,12 @@ def run_pipeline(
             time.sleep(0.3)
 
     return results
+
+
+if __name__ == "__main__":
+    # Setup logging to see progress
+    logging.basicConfig(
+        level=logging.INFO,
+        format="%(asctime)s - %(name)s - %(levelname)s - %(message)s"
+    )
+    run_pipeline()
