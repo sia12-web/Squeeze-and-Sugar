@@ -37,10 +37,8 @@ def run_startup_check() -> bool:
     try:
         client = AlpacaClient()
         # Fetch 1 bar of AAPL as connectivity test
-        df = client.fetch_ohlcv("AAPL", "1Hour", bars=1)
-        if df.empty:
-            logger.error("FAIL: Alpaca connectivity test failed (empty response).")
-            return False
+        # On weekends/closed market, this might be empty, which is OK as long as no exception is raised
+        client.fetch_ohlcv("AAPL", "1Hour", bars=1)
         logger.info("OK: Alpaca API reachable.")
     except Exception as e:
         logger.error("FAIL: Alpaca connectivity error: %s", e)
