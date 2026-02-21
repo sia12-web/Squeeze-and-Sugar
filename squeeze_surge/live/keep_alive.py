@@ -18,13 +18,19 @@ def run_with_retries():
     notifier = TelegramNotifier(config.telegram_bot_token, config.telegram_chat_id)
     restart_count = 0
     
+    import os
+    env = os.environ.copy()
+    env["PYTHONPATH"] = str(config.data_dir.parent)
+    
     while restart_count < MAX_RESTARTS:
         logger.info("Starting live engine (Attempt %d/%d)...", restart_count + 1, MAX_RESTARTS)
         
         try:
             # Run the main script as a separate process
-            # Use 'python' or 'python3' depending on the environment
-            process = subprocess.Popen([sys.executable, "-m", "squeeze_surge.live.run_live"])
+            process = subprocess.Popen(
+                [sys.executable, "-m", "squeeze_surge.live.run_live"],
+                env=env
+            )
             
             # Wait for the process to exit
             exit_code = process.wait()
