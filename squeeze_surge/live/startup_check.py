@@ -22,16 +22,16 @@ def run_startup_check() -> bool:
         return False
     logger.info("OK: optimization_results.json found.")
 
-    # 2. Check for 1Hour parquet files (at least for AAPL)
+    # 2. Check for historical parquet files (at least one)
     data_found = False
-    for p in (config.data_dir / "1Hour").glob("*.parquet"):
+    for p in config.data_dir.glob("*.parquet"):
         data_found = True
         break
         
     if not data_found:
-        logger.error("MISSING: No 1Hour parquet data found in %s", config.data_dir / "1Hour")
+        logger.error("MISSING: No historical parquet data found in %s", config.data_dir)
         return False
-    logger.info("OK: 1Hour historical data found.")
+    logger.info("OK: Historical data found.")
 
     # 3. Alpaca Connectivity
     try:
