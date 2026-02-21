@@ -57,8 +57,8 @@ class AlpacaClient:
 
         bars_response = self._client.get_stock_bars(request)
 
-        # Alpaca returns a dict keyed by symbol
-        bars = bars_response[symbol]
+        # Alpaca returns a dict keyed by symbol in the .data attribute
+        bars = bars_response.data.get(symbol, [])
 
         if not bars:
             return pd.DataFrame(columns=["time", "open", "high", "low", "close", "volume"])
@@ -85,7 +85,7 @@ class AlpacaClient:
         )
         
         bars_response = self._client.get_stock_bars(request)
-        data = bars_response[symbol]
+        data = bars_response.data.get(symbol, [])
         
         if not data:
             return pd.DataFrame()
