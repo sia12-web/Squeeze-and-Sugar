@@ -70,3 +70,26 @@ class AlpacaClient:
         df = df[["time", "open", "high", "low", "close", "volume"]]
 
         return df
+
+    def fetch_ohlcv(self, symbol: str, timeframe: str, bars: int = 100) -> pd.DataFrame:
+        """Convenience method to fetch the latest N bars for a symbol."""
+        tf = TIMEFRAME_MAP.get(timeframe)
+        if tf is None:
+            raise ValueError(f"Unsupported timeframe: {timeframe}")
+
+        request = StockBarsRequest(
+            symbol_or_symbols=symbol,
+            timeframe=tf,
+            limit=bars,
+            feed="iex"
+        )
+        
+        bars_response = self._client.get_stock_bars(request)
+        data = bars_response[symbol]
+        
+        if not data:
+            return pd.DataFrame()
+            
+        df = pd.DataFrame([b.model_dump() for b in data])
+        df = df.rename(columns={"timestamp": "time"})
+        return df[["time", "open", "high", "low", "close", "volume"]]
